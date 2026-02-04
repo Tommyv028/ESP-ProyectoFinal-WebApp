@@ -21,7 +21,7 @@ const firebaseConfig = {
 // ADVERTENCIA: Hardcodear credenciales aquí no es seguro para producción.
 // Esto es solo para fines de este proyecto de ejemplo.
 const email = "tomas.valori@gmail.com";
-const password = "ProjectoFinal2026";
+const password = "Proyecto2026";
 
 // --- INICIALIZACIÓN ---
 const app = initializeApp(firebaseConfig);
@@ -214,3 +214,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Asignar evento al botón de descarga
     document.getElementById('download-btn').addEventListener('click', downloadDataAsCSV);
 });
+
