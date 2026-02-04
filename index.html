@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Sensores ESP32</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js para los gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Dashboard de Sensores ESP32</h1>
+    </header>
+    <main>
+        <div class="status-container">
+            <div id="noise-status" class="status-box">
+                <h3>Ruido</h3>
+                <p>--</p>
+            </div>
+            <div class="status-box">
+                <h3>Descargar Datos</h3>
+                <button id="download-btn">Descargar CSV</button>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>Temperatura (°C)</h3>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Humedad (%)</h3>
+                <canvas id="humChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Presión (hPa)</h3>
+                <canvas id="presChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Calidad de Aire (Tolueno ppm)</h3>
+                <canvas id="toluenoChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs (usando módulos de JS) -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
