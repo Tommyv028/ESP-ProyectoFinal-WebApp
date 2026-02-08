@@ -137,6 +137,7 @@ function listenToSensorData() {
     onValue(recentDataQuery, (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
+            console.log("Datos recibidos de Firebase (Tiempo Real):", data);
             updateUI(data);
         } else {
             console.log("No hay datos de sensores disponibles.");
@@ -161,6 +162,7 @@ async function downloadDataAsCSV() {
         }
 
         const data = snapshot.val();
+        console.log("Datos completos para CSV:", data);
         let csvContent = "timestamp,temperatura,humedad,presion,luz,ruido,tolueno\n";
 
         for (const key in data) {
@@ -214,4 +216,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // Asignar evento al botón de descarga
     document.getElementById('download-btn').addEventListener('click', downloadDataAsCSV);
 });
-
