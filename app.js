@@ -32,7 +32,7 @@ const database = getDatabase(app);
 const MAX_DATA_POINTS = 30; // Número máximo de puntos a mostrar en los gráficos
 
 // Función para crear un gráfico
-function createChart(ctx, label) {
+function createChart(ctx, label, scaleType = 'linear') {
     return new Chart(ctx, {
         type: 'line',
         data: {
@@ -55,7 +55,8 @@ function createChart(ctx, label) {
                     grid: { color: 'rgba(224, 224, 224, 0.1)' }
                 },
                 y: {
-                    beginAtZero: true, // Fuerza a que el eje Y arranque en 0
+                    type: scaleType,
+                    beginAtZero: scaleType === 'linear', // Solo forzar 0 en escalas lineales
                     ticks: { color: '#e0e0e0' },
                     grid: { color: 'rgba(224, 224, 224, 0.1)' }
                 }
@@ -74,8 +75,8 @@ function createChart(ctx, label) {
 const tempChart = createChart(document.getElementById('tempChart').getContext('2d'), 'Temperatura');
 const humChart = createChart(document.getElementById('humChart').getContext('2d'), 'Humedad');
 const presChart = createChart(document.getElementById('presChart').getContext('2d'), 'Presión');
-const toluenoChart = createChart(document.getElementById('toluenoChart').getContext('2d'), 'Tolueno');
-//const noiseChart = createChart(document.getElementById('noiseChart').getContext('2d'), 'Ruido (0=Off, 1=On)');
+const luxChart = createChart(document.getElementById('luxChart').getContext('2d'), 'Luminosidad', 'logarithmic');
+const toluenoChart = createChart(document.getElementById('toluenoChart').getContext('2d'), 'Tolueno', 'logarithmic');
 const noiseChart = createChart(document.getElementById('noiseChart').getContext('2d'), 'Ruido');
 
 // --- LÓGICA PRINCIPAL ---
