@@ -106,6 +106,17 @@ function updateUI(data) {
     updateChartData(luxChart, labels, luxData);
     updateChartData(toluenoChart, labels, toluenoData);
     updateChartData(noiseChart, labels, noiseData); 
+
+    // Actualizar tarjeta de últimos datos
+    const latest = recentData[recentData.length - 1];
+    if (latest) {
+        document.getElementById('last-temp').textContent = latest.temperatura ? latest.temperatura.toFixed(2) : '--';
+        document.getElementById('last-hum').textContent = latest.humedad ? latest.humedad.toFixed(2) : '--';
+        document.getElementById('last-pres').textContent = latest.presion ? latest.presion.toFixed(2) : '--';
+        document.getElementById('last-lux').textContent = latest.luz ? latest.luz.toFixed(2) : '--';
+        document.getElementById('last-ppm').textContent = latest.tolueno ? latest.tolueno.toFixed(2) : '--';
+        document.getElementById('last-noise').textContent = (latest.ruido !== undefined) ? latest.ruido : '--';
+    }
 }
 
 function updateChartData(chart, labels, data) {
