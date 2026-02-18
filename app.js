@@ -95,6 +95,7 @@ function updateUI(data) {
     const tempData = recentData.map(d => d.temperatura);
     const humData = recentData.map(d => d.humedad);
     const presData = recentData.map(d => d.presion);
+    const luxData = recentData.map(d => d.luz);
     const toluenoData = recentData.map(d => d.tolueno);
     const noiseData = recentData.map(d => d.ruido || 0);
 
@@ -102,23 +103,9 @@ function updateUI(data) {
     updateChartData(tempChart, labels, tempData);
     updateChartData(humChart, labels, humData);
     updateChartData(presChart, labels, presData);
+    updateChartData(luxChart, labels, presData);
     updateChartData(toluenoChart, labels, toluenoData);
-
-    // Actualizar estado del ruido
-    /*
-    const latestReading = recentData[recentData.length - 1];
-    if (latestReading) {
-        const noiseStatusEl = document.querySelector('#noise-status p');
-        if (latestReading.ruido > 0) {
-            noiseStatusEl.textContent = '¡Detectado!';
-            noiseStatusEl.style.color = '#e94560';
-        } else {
-            noiseStatusEl.textContent = 'Normal';
-            noiseStatusEl.style.color = '#4caf50';
-        }
-    }
-    */
-    updateChartData(noiseChart, labels, noiseData);
+    updateChartData(noiseChart, labels, noiseData); 
 }
 
 function updateChartData(chart, labels, data) {
