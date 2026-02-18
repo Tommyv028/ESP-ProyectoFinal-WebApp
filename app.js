@@ -103,7 +103,7 @@ function updateUI(data) {
     updateChartData(tempChart, labels, tempData);
     updateChartData(humChart, labels, humData);
     updateChartData(presChart, labels, presData);
-    updateChartData(luxChart, labels, presData);
+    updateChartData(luxChart, labels, luxData);
     updateChartData(toluenoChart, labels, toluenoData);
     updateChartData(noiseChart, labels, noiseData); 
 }
