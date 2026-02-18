@@ -14,10 +14,6 @@
     </header>
     <main>
         <div class="status-container">
-            <div id="noise-status" class="status-box">
-                <h3>Ruido</h3>
-                <p>--</p>
-            </div>
             <div class="status-box">
                 <h3>Descargar Datos</h3>
                 <button id="download-btn">Descargar CSV</button>
@@ -40,6 +36,10 @@
             <div class="chart-container">
                 <h3>Calidad de Aire (Tolueno ppm)</h3>
                 <canvas id="toluenoChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Ruido (0=Normal, 1=Detectado)</h3>
+                <canvas id="noiseChart"></canvas>
             </div>
         </div>
     </main>

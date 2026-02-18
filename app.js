@@ -48,12 +48,14 @@ function createChart(ctx, label) {
             }]
         },
         options: {
+            maintainAspectRatio: false, // Permite ajustar la altura mediante CSS en el contenedor
             scales: {
                 x: {
                     ticks: { color: '#e0e0e0' },
                     grid: { color: 'rgba(224, 224, 224, 0.1)' }
                 },
                 y: {
+                    beginAtZero: true, // Fuerza a que el eje Y arranque en 0
                     ticks: { color: '#e0e0e0' },
                     grid: { color: 'rgba(224, 224, 224, 0.1)' }
                 }
@@ -73,6 +75,8 @@ const tempChart = createChart(document.getElementById('tempChart').getContext('2
 const humChart = createChart(document.getElementById('humChart').getContext('2d'), 'Humedad');
 const presChart = createChart(document.getElementById('presChart').getContext('2d'), 'Presión');
 const toluenoChart = createChart(document.getElementById('toluenoChart').getContext('2d'), 'Tolueno');
+//const noiseChart = createChart(document.getElementById('noiseChart').getContext('2d'), 'Ruido (0=Off, 1=On)');
+const noiseChart = createChart(document.getElementById('noiseChart').getContext('2d'), 'Ruido');
 
 // --- LÓGICA PRINCIPAL ---
 
@@ -91,6 +95,7 @@ function updateUI(data) {
     const humData = recentData.map(d => d.humedad);
     const presData = recentData.map(d => d.presion);
     const toluenoData = recentData.map(d => d.tolueno);
+    const noiseData = recentData.map(d => d.ruido || 0);
 
     // Actualizar gráficos
     updateChartData(tempChart, labels, tempData);
@@ -99,6 +104,7 @@ function updateUI(data) {
     updateChartData(toluenoChart, labels, toluenoData);
 
     // Actualizar estado del ruido
+    /*
     const latestReading = recentData[recentData.length - 1];
     if (latestReading) {
         const noiseStatusEl = document.querySelector('#noise-status p');
@@ -110,6 +116,8 @@ function updateUI(data) {
             noiseStatusEl.style.color = '#4caf50';
         }
     }
+    */
+    updateChartData(noiseChart, labels, noiseData);
 }
 
 function updateChartData(chart, labels, data) {
