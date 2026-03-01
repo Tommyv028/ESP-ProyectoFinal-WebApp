@@ -131,10 +131,11 @@ function updateChartData(chart, labels, data) {
             chart.options.scales.y.min = dataMin - margin;
             chart.options.scales.y.max = dataMax + margin;
         } else {
-            // "un -15% del minimo registrado". Una interpretación robusta es:
-            // nuevoMínimo = mínimo - (15% del valor absoluto del mínimo)
-            // Esto funciona para valores positivos y negativos (ej. temperatura).
-            const newMin = dataMin - (Math.abs(dataMin) * 0.15);
+            // Ajustamos el margen: 2% para Presión (valores grandes), 15% para el resto
+            const isPressure = chart.data.datasets[0].label === 'Presión';
+            const marginFactor = isPressure ? 0.02 : 0.15;
+
+            const newMin = dataMin - (Math.abs(dataMin) * marginFactor);
             chart.options.scales.y.min = newMin;
             
             // Dejamos que Chart.js calcule el máximo para tener un buen padding superior
