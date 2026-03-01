@@ -56,7 +56,6 @@ function createChart(ctx, label, scaleType = 'linear') {
                 },
                 y: {
                     type: scaleType,
-                    beginAtZero: scaleType === 'linear', // Solo forzar 0 en escalas lineales
                     ticks: { color: '#e0e0e0' },
                     grid: { color: 'rgba(224, 224, 224, 0.1)' }
                 }
@@ -120,6 +119,43 @@ function updateUI(data) {
 }
 
 function updateChartData(chart, labels, data) {
+    const validData = data.filter(d => d !== null && d !== undefined && isFinite(d));
+
+    if (validData.length > 0) {
+        const dataMin = Math.min(...validData);
+        const dataMax = Math.max(...validData);
+
+        // Si todos los valores son iguales, creamos un rango artificial para que se vea la línea
+        if (dataMin === dataMax) {
+            const margin = dataMin === 0 ? 1 : Math.abs(dataMin) * 0.2; // 20% de margen
+            chart.options.scales.y.min = dataMin - margin;
+            chart.options.scales.y.max = dataMax + margin;
+        } else {
+            // "un -15% del minimo registrado". Una interpretación robusta es:
+            // nuevoMínimo = mínimo - (15% del valor absoluto del mínimo)
+            // Esto funciona para valores positivos y negativos (ej. temperatura).
+            const newMin = dataMin - (Math.abs(dataMin) * 0.15);
+            chart.options.scales.y.min = newMin;
+            
+            // Dejamos que Chart.js calcule el máximo para tener un buen padding superior
+            delete chart.options.scales.y.max;
+        }
+
+        // Para escalas logarítmicas, el mínimo debe ser > 0
+        if (chart.options.scales.y.type === 'logarithmic' && chart.options.scales.y.min <= 0) {
+            const minPositive = Math.min(...validData.filter(v => v > 0));
+            if (isFinite(minPositive) && minPositive > 0) {
+                chart.options.scales.y.min = minPositive * 0.85; // 15% de margen inferior
+            } else {
+                delete chart.options.scales.y.min; // No hay datos positivos, no se puede setear min
+            }
+        }
+    } else {
+        // Sin datos, reseteamos la escala para que no mantenga los límites anteriores
+        delete chart.options.scales.y.min;
+        delete chart.options.scales.y.max;
+    }
+
     chart.data.labels = labels;
     chart.data.datasets[0].data = data;
     chart.update();
