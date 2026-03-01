@@ -133,7 +133,7 @@ function updateChartData(chart, labels, data) {
         } else {
             // Ajustamos el margen: 2% para Presión (valores grandes), 15% para el resto
             const isPressure = chart.data.datasets[0].label === 'Presión';
-            const marginFactor = isPressure ? 0.02 : 0.15;
+            const marginFactor = isPressure ? 0.01 : 0.15;
 
             const newMin = dataMin - (Math.abs(dataMin) * marginFactor);
             chart.options.scales.y.min = newMin;
