@@ -84,7 +84,11 @@ const noiseChart = createChart(document.getElementById('noiseChart').getContext(
 function updateUI(data) {
     // Convertir el objeto de datos en un array y ordenarlo por clave (tiempo)
     const dataArray = Object.keys(data).map(key => ({ key, ...data[key] }));
-    dataArray.sort((a, b) => a.key.localeCompare(b.key));
+    dataArray.sort((a, b) => {
+        const timeA = a.timestamp || firebasePushKeyToTimestamp(a.key);
+        const timeB = b.timestamp || firebasePushKeyToTimestamp(b.key);
+        return timeA - timeB;
+    });
 
     // Limitar al número máximo de puntos
     const recentData = dataArray.slice(-MAX_DATA_POINTS);
@@ -176,7 +180,7 @@ function firebasePushKeyToTimestamp(pushKey) {
 function listenToSensorData() {
     const sensorsRef = ref(database, 'sensores');
     // Usamos una query para obtener solo los últimos N resultados para no cargar todo el historial
-    const recentDataQuery = query(sensorsRef, limitToLast(MAX_DATA_POINTS));
+    const recentDataQuery = query(sensorsRef, orderByChild('timestamp'), limitToLast(MAX_DATA_POINTS));
 
     onValue(recentDataQuery, (snapshot) => {
         if (snapshot.exists()) {
