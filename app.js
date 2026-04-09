@@ -1,11 +1,9 @@
-// Importa las funciones que necesitas de los SDKs de Firebase
+// Funciones de los SDKs de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 import { getDatabase, ref, onValue, get, query, limitToLast, orderByChild } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js";
 
 // --- CONFIGURACIÓN DE FIREBASE ---
-// ¡IMPORTANTE! Reemplaza esto con la configuración de tu propio proyecto de Firebase.
-// La puedes encontrar en tu consola de Firebase -> Configuración del proyecto -> Tus apps -> Configuración del SDK.
 const firebaseConfig = {
   apiKey: "AIzaSyCNZ4r0KUzA8_vb2U4Hbo8r9cM-xrgZlD8",
   authDomain: "esp-proyectofinal.firebaseapp.com",
@@ -17,9 +15,7 @@ const firebaseConfig = {
 };
 
 // --- CREDENCIALES DE USUARIO ---
-// Las mismas que usaste en el ESP32.
-// ADVERTENCIA: Hardcodear credenciales aquí no es seguro para producción.
-// Esto es solo para fines de este proyecto de ejemplo.
+// Esto es solo para fines de este proyecto.
 const email = "tomas.valori@gmail.com";
 const password = "Proyecto2026";
 
@@ -29,7 +25,7 @@ const auth = getAuth(app);
 const database = getDatabase(app);
 
 // --- GRÁFICOS ---
-const MAX_DATA_POINTS = 30; // Número máximo de puntos a mostrar en los gráficos
+const MAX_DATA_POINTS = 30;
 
 // Función para crear un gráfico
 function createChart(ctx, label, scaleType = 'linear') {
@@ -48,7 +44,7 @@ function createChart(ctx, label, scaleType = 'linear') {
             }]
         },
         options: {
-            maintainAspectRatio: false, // Permite ajustar la altura mediante CSS en el contenedor
+            maintainAspectRatio: false,
             scales: {
                 x: {
                     ticks: { color: '#e0e0e0' },
@@ -78,7 +74,7 @@ const luxChart = createChart(document.getElementById('luxChart').getContext('2d'
 const toluenoChart = createChart(document.getElementById('toluenoChart').getContext('2d'), 'Tolueno', 'logarithmic');
 const noiseChart = createChart(document.getElementById('noiseChart').getContext('2d'), 'Ruido');
 
-// --- LÓGICA PRINCIPAL ---
+// --- LÓGICA ---
 
 // Función para actualizar los gráficos y el estado
 function updateUI(data) {
@@ -129,34 +125,34 @@ function updateChartData(chart, labels, data) {
         const dataMin = Math.min(...validData);
         const dataMax = Math.max(...validData);
 
-        // Si todos los valores son iguales, creamos un rango artificial para que se vea la línea
+        
         if (dataMin === dataMax) {
-            const margin = dataMin === 0 ? 1 : Math.abs(dataMin) * 0.2; // 20% de margen
+            const margin = dataMin === 0 ? 1 : Math.abs(dataMin) * 0.2;
             chart.options.scales.y.min = dataMin - margin;
             chart.options.scales.y.max = dataMax + margin;
         } else {
-            // Ajustamos el margen: 1% para Presión, 15% para el resto
+            
             const isPressure = chart.data.datasets[0].label === 'Presión';
             const marginFactor = isPressure ? 0.01 : 0.10;
 
             const newMin = dataMin - (Math.abs(dataMin) * marginFactor);
             chart.options.scales.y.min = newMin;
             
-            // Dejamos que Chart.js calcule el máximo para tener un buen padding superior
+            
             delete chart.options.scales.y.max;
         }
 
-        // Para escalas logarítmicas, el mínimo debe ser > 0
+
         if (chart.options.scales.y.type === 'logarithmic' && chart.options.scales.y.min <= 0) {
             const minPositive = Math.min(...validData.filter(v => v > 0));
             if (isFinite(minPositive) && minPositive > 0) {
-                chart.options.scales.y.min = minPositive * 0.85; // 15% de margen inferior
+                chart.options.scales.y.min = minPositive * 0.85; 
             } else {
-                delete chart.options.scales.y.min; // No hay datos positivos, no se puede setear min
+                delete chart.options.scales.y.min; 
             }
         }
     } else {
-        // Sin datos, reseteamos la escala para que no mantenga los límites anteriores
+        // Sin datos, reseteamos la escala
         delete chart.options.scales.y.min;
         delete chart.options.scales.y.max;
     }
@@ -166,7 +162,6 @@ function updateChartData(chart, labels, data) {
     chart.update();
 }
 
-// Firebase genera push keys que contienen un timestamp. Esta función lo extrae.
 function firebasePushKeyToTimestamp(pushKey) {
     const PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
     let timestamp = 0;
@@ -176,7 +171,6 @@ function firebasePushKeyToTimestamp(pushKey) {
     return timestamp;
 }
 
-// Función para escuchar los datos de los sensores en tiempo real
 function listenToSensorData() {
     const sensorsRef = ref(database, 'sensores');
     // Usamos una query para obtener solo los últimos N resultados para no cargar todo el historial
@@ -250,7 +244,7 @@ async function downloadDataAsCSV() {
 
 // --- INICIO DE LA APP ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Autenticar y empezar a escuchar
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log("Autenticación con Firebase exitosa.");
@@ -261,6 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("No se pudo conectar a Firebase. Revisa las credenciales y la configuración.");
       });
 
-    // Asignar evento al botón de descarga
+
     document.getElementById('download-btn').addEventListener('click', downloadDataAsCSV);
 });
