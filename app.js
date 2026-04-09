@@ -122,6 +122,10 @@ function updateChartData(chart, labels, data) {
     const validData = data.filter(d => d !== null && d !== undefined && isFinite(d));
 
     if (validData.length > 0) {
+        if (chart.data.datasets[0].label === 'Ruido') {
+            chart.options.scales.y.min = 0;
+            chart.options.scales.y.max = 1;
+        } else {
         const dataMin = Math.min(...validData);
         const dataMax = Math.max(...validData);
 
@@ -140,6 +144,7 @@ function updateChartData(chart, labels, data) {
             
             
             delete chart.options.scales.y.max;
+        }
         }
 
 
